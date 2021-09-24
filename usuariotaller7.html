@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+ <head>
+ <title>Formulario Taller 7</title>
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+ <script type="text/javascript">
+    function validaForm(){
+        if($("#nombre").val() == ""){
+            alert("El campo Nombre no puede estar vacío.");
+            $("#nombre").focus();
+            return false;
+        }
+        if($("#apellidos").val() == ""){
+            alert("El campo Apellidos no puede estar vacío.");
+            $("#apellidos").focus();
+            return false;
+        }
+        if($("#direccion").val() == ""){
+            alert("El campo Dirección no puede estar vacío.");
+            $("#direccion").focus();
+            return false;
+        }  
+        if($("#usuario").val() == ""){
+            alert("El campo Usuario no puede estar vacío.");
+            $("#usuario").focus();
+            return false;
+        } 
+        if($("#fechadenacimiento").val() == ""){
+            alert("El campo Fecha de nacimiento no puede estar vacío.");
+            $("#fechadenacimiento").focus();
+            return false;
+        }
+        if($("#password").val() == ""){
+            alert("El campo Contraseña no puede estar vacío.");
+            $("#password").focus();
+            return false;
+        }  
+        if($("#password2").val() == ""){
+            alert("El campo Confirmar contraseña no puede estar vacío.");
+            $("#password2").focus();
+            return false;
+        }    
+        if($("#telefono").val() == ""){
+            alert("El campo Telefono no puede estar vacío.");
+            $("#telefono").focus();
+            return false;
+        }   
+      
+
+        return true; 
+    }
+    $(document).ready( function() { 
+    $("#botonenviar").click( function() {
+        if(validaForm()){              
+            $.post("enviar.php",$("#formdata").serialize(),function(res){
+                $("#formulario").fadeOut("slow"); 
+                if(res == 1){
+                    $("#exito").delay(500).fadeIn("slow");
+                } else {
+                    $("#fracaso").delay(500).fadeIn("slow"); 
+                }
+            });
+        }
+    });    
+});
+function confirmarpass(){
+    password = document.formualrio.password.value
+    password2 = document.formualrio.password2.value
+
+    if (password == password2)
+       alert("Las dos claves son iguales")
+    else
+       alert("Las dos claves son distintas")
+}
+</script>
+<style>
+    p {
+
+        font: condensed 200% sans-serif;
+        color: rgb(255, 255, 255);
+    }
+
+    body {
+        text-align: center;
+        background: rgba(63, 33, 102, 0.3)
+    }
+
+    form {
+        display: inline-block;
+    }
+
+    fieldset {
+        border-radius: 25px;
+        background: url(https://i.pinimg.com/originals/f7/bc/65/f7bc65bdf5e33c714466c9cadc365ede.jpg);
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 100%;
+        color: whtite;
+    }
+
+
+    legend {
+        font: condensed 200% sans-serif;
+        margin-bottom: 0px;
+        margin-left: 16px;
+        color: rgb(255, 255, 255);
+    }
+</style>
+ </head>
+ <body>
+        <div id="formulario">
+            <form action="" name="formualrio" method="post" id="formdata">
+                <legend>Registro de usuario</legend>
+                <p><label for="nombre">Nombre: </label><input type="text" name="nombre" id="nombre" required="required"></br></p>
+                <p><label for="apellidos">Apellidos: </label><input type="text" name="apellidos" id="apellidos" required="required"></br></p>
+                <p><label for="usuario">Usuario: </label><input type="text" name="usuario" id="usuario" required="required"></br></p>
+                <p><label for="direccion">Dirección: </label><input type="text" name="direccion" id="direccion" required="required"></br></p>
+                <p><label for="fechadenacimiento">Fecha de Nacimiento: </label><input type="date" name="fechadenacimiento" id="fechadenacimiento" required="required"></br></p>
+                <p><label for="password">Contraseña:</label><input type="password" name="password" id="password" pattern=".{8,}" title="8 o mas caracteres"></br></p>
+                <p><label for="password2">Confirmar Contraseña:</label><input type="password" name="password2" id="password2" pattern=".{8,}" title="8 o mas caracteres"></br></p>
+                <p><input type="button" value="Comprobar si las clavse son iguales" onClick="confirmarpass()"></br></p>
+                <p><label for="telefono">Telefono: </label><input type="tel" name="telefono" id="telefono" required="required"></br></p>
+                <p>Seleccione el lugar de residencia:</p>             
+                           
+                
+                <div id="cosa"></div>
+    <script>
+        function updateCities(json, departamentosSelect, ciudadesSelect) {
+            json.forEach(element => {
+                if (element.id !== parseInt(departamentosSelect.value)) {
+                    return;
+                }
+                ciudadesSelect.innerHTML = '';
+                element.ciudades.forEach(ciudad => {
+                    let option = document.createElement("option");
+                    option.value = ciudad
+                    option.textContent = ciudad
+                    ciudadesSelect.append(option);
+                });
+            })
+        }
+        $.ajax({
+            url: "https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.min.json",
+            success: function (response) {
+                const departamentoSelect = document.createElement("select");
+                const ciudadesSelect = document.createElement("select");
+                const json = JSON.parse(response);
+                json.forEach(element => {
+                    let option = document.createElement("option");
+                    option.value = element.id
+                    option.textContent = element.departamento
+                    departamentoSelect.append(option);
+                });
+                $('#cosa').append(departamentoSelect);
+                $('#cosa').append(ciudadesSelect);
+
+                updateCities(json, departamentoSelect, ciudadesSelect);
+
+                departamentoSelect.addEventListener('change', function (event) {
+                    updateCities(json, departamentoSelect, ciudadesSelect);
+                });
+            }
+        })
+    </script>
+                <h1></h1>
+                <input type="button" id="botonenviar" value="Enviar">
+            </form>
+        </div>
+        <div id="exito" style="display:none">
+            Sus datos han sido recibidos con éxito.
+        </div>
+        <div id="fracaso" style="display:none">
+            Se ha producido un error durante el envío de datos.
+        </div>
+ </body>
+</html>
